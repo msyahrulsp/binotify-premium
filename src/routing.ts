@@ -6,7 +6,7 @@ import { PageRouting } from "./types/interface"
 export const Routing: PageRouting[] = [
   {
     title: 'Manage Song',
-    path: 'songs/singer/:singerid',
+    path: 'singer/:singerid/songs',
     component: SongList
   },
   {

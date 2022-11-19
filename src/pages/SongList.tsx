@@ -11,7 +11,7 @@ const SongList = () => {
 
   const fetchSongs = async () => {
     try {
-      const res = await axios.get(`http://127.0.0.1:3000/songs/singer/${singerid}`)
+      const res = await axios.get(`http://127.0.0.1:3000/singer/${singerid}/songs`)
       console.log('res', res.data)
       setSongs(res.data)
     } catch (err) {
