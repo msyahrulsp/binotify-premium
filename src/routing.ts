@@ -1,6 +1,6 @@
 import Home from "./Home"
-import ManageSong from "./pages/ManageSong"
-import SongList from "./pages/SongList"
+import ManageSong from "./pages/ManageSong/EditSong"
+import SongList from "./pages/ManageSong"
 import { PageRouting } from "./types/interface"
 
 export const Routing: PageRouting[] = [
