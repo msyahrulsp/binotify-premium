@@ -100,104 +100,93 @@ const SongList = () => {
   } = tableInstance
 
   return (
-    <Flex minH="100vh">
-      <VStack bgColor="blackAlpha.900" color="white" minW="40">
-        <div>sidebar</div>
-      </VStack>
-      <Flex
-        flexGrow={1}
-        justifyContent="flex-start"
-        flexDirection="column"
-        pt={8}
-        px={8}
-      >
-        <Text fontSize="3xl" mb={4}>
-          Daftar Lagu Premium
-        </Text>
-        <TableContainer>
-          <Table {...getTableProps()}>
-            <Thead>
-              {headerGroups.map((headerGroup) => (
-                <Tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => (
-                    <Th {...column.getHeaderProps()}>
-                      {column.render('Header')}
-                    </Th>
-                  ))}
+    <Flex flexGrow={1} justifyContent="flex-start" flexDirection="column">
+      <Text fontSize="3xl" mb={4}>
+        Daftar Lagu Premium
+      </Text>
+      <TableContainer>
+        <Table {...getTableProps()}>
+          <Thead>
+            {headerGroups.map((headerGroup) => (
+              <Tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <Th {...column.getHeaderProps()}>
+                    {column.render('Header')}
+                  </Th>
+                ))}
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody {...getTableBodyProps()}>
+            {page.map((row) => {
+              prepareRow(row)
+              return (
+                <Tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                    )
+                  })}
                 </Tr>
-              ))}
-            </Thead>
-            <Tbody {...getTableBodyProps()}>
-              {page.map((row) => {
-                prepareRow(row)
-                return (
-                  <Tr {...row.getRowProps()}>
-                    {row.cells.map((cell) => {
-                      return (
-                        <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
-                      )
-                    })}
-                  </Tr>
-                )
-              })}
-            </Tbody>
-          </Table>
-          <Flex p={2} justifyContent='space-between'>
-            <HStack>
-              <Button
-                colorScheme="teal"
-                size="sm"
-                onClick={() => gotoPage(0)}
-                disabled={!canPreviousPage}
-              >
-                {'<<'}
-              </Button>{' '}
-              <Button
-                colorScheme="teal"
-                size="sm"
-                onClick={() => previousPage()}
-                disabled={!canPreviousPage}
-              >
-                {'<'}
-              </Button>{' '}
-              <Button
-                colorScheme="teal"
-                size="sm"
-                onClick={() => nextPage()}
-                disabled={!canNextPage}
-              >
-                {'>'}
-              </Button>{' '}
-              <Button
-                colorScheme="teal"
-                size="sm"
-                onClick={() => gotoPage(pageCount - 1)}
-                disabled={!canNextPage}
-              >
-                {'>>'}
-              </Button>{' '}
-              <span>
-                Page{' '}
-                <strong>
-                  {pageIndex + 1} of {pageOptions.length}
-                </strong>{' '}
-              </span>
-            </HStack>
-            <select
-              value={pageSize}
-              onChange={(e) => {
-                setPageSize(Number(e.target.value))
-              }}
+              )
+            })}
+          </Tbody>
+        </Table>
+        <Flex p={2} justifyContent="space-between">
+          <HStack>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              onClick={() => gotoPage(0)}
+              disabled={!canPreviousPage}
             >
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </select>
-          </Flex>
-        </TableContainer>
-      </Flex>
+              {'<<'}
+            </Button>{' '}
+            <Button
+              colorScheme="teal"
+              size="sm"
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
+            >
+              {'<'}
+            </Button>{' '}
+            <Button
+              colorScheme="teal"
+              size="sm"
+              onClick={() => nextPage()}
+              disabled={!canNextPage}
+            >
+              {'>'}
+            </Button>{' '}
+            <Button
+              colorScheme="teal"
+              size="sm"
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+            >
+              {'>>'}
+            </Button>{' '}
+            <span>
+              Page{' '}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>{' '}
+            </span>
+          </HStack>
+          <select
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value))
+            }}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </Flex>
+      </TableContainer>
     </Flex>
   )
 }
