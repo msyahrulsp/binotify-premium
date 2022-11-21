@@ -14,15 +14,22 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 // @ts-ignore
 import { useTable, usePagination } from 'react-table'
 
 const SongList = () => {
   /**
    * penyanyi dapat melihat daftar lagu-lagu premium miliknya
+   * dapat diakses penyanyi untuk mengelola lagu-lagu mereka
+   * penyanyi dapat menambah, menghapus, mengubah lagu-lagu premium yang ditawarkan
+   * lagu-lagu yang dapat dikelola seorang penyanyi adalah lagu-lagu mereka sendiri, penyanyi tidak dapat mengelola lagu penyanyi lain
+   * Field yang dapat diedit oleh penyanyi adalah judul dan juga file audio lagu tersebut
+   * pagination pada halaman ini dengan jumlah lagu per halaman yang kalian tentukan sendiri. Pagination boleh diimplementasikan secara server-side maupun client-side
    */
   const { singerid } = useParams()
+  const navigate = useNavigate();
+
   const [songs, setSongs] = useState([])
   const [isEdit, setIsEdit] = useState(false)
 
@@ -42,6 +49,11 @@ const SongList = () => {
   }, [])
 
   const data = useMemo(() => songs, [songs])
+
+  const handleSelectSong = (songID) => {
+    // handler for selected song to redirect to edit page
+    navigate(`/singer/${singerid}/songs/${songID}`)
+  }
 
   const columns = useMemo(
     () => [
@@ -69,7 +81,7 @@ const SongList = () => {
           <Button
             colorScheme="teal"
             size="sm"
-            onClick={() => console.log('row props', props.row.values.judul)}
+            onClick={() => handleSelectSong(props.row.values.song_id)}
           >
             Edit
           </Button>
