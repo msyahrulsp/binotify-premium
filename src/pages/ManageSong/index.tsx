@@ -13,10 +13,13 @@ import {
   Text,
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useEffect, useMemo, useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useContext, useEffect, useMemo, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 // @ts-ignore
 import { useTable, usePagination } from 'react-table'
+import { MessageContext } from '../../App'
+import Notification from '../../components/Notification'
+import AddSong from './AddSong'
 
 const SongList = () => {
   /**
@@ -28,16 +31,17 @@ const SongList = () => {
    * pagination pada halaman ini dengan jumlah lagu per halaman yang kalian tentukan sendiri. Pagination boleh diimplementasikan secara server-side maupun client-side
    */
   const { singerid } = useParams()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const [songs, setSongs] = useState([])
-  const [isEdit, setIsEdit] = useState(false)
+  const [isAdd, setIsAdd] = useState(true)
+  const { message, setMessageContent } = useContext(MessageContext)
+
+  const baseUrl = import.meta.env.VITE_BASE_REST_URL
 
   const fetchSongs = async () => {
     try {
-      const res = await axios.get(
-        `http://127.0.0.1:3000/singer/${singerid}/songs`
-      )
+      const res = await axios.get(`${baseUrl}/singer/${singerid}/songs`)
       setSongs(res.data)
     } catch (err) {
       console.error(err)
@@ -50,9 +54,30 @@ const SongList = () => {
 
   const data = useMemo(() => songs, [songs])
 
-  const handleSelectSong = (songID) => {
+  const handleAddSong = () => {
+    setIsAdd(!isAdd)
+  }
+
+  const handleEditSong = (songID) => {
     // handler for selected song to redirect to edit page
     navigate(`/singer/${singerid}/songs/${songID}`)
+  }
+
+  const handleDeleteSong = async (songID) => {
+    // handler to delete song
+    try {
+      const res = await axios.delete(
+        `${baseUrl}/singer/${singerid}/songs/${songID}`
+      )
+
+      setSongs((prevState) =>
+        prevState.filter((prevState) => prevState.song_id !== songID)
+      )
+
+      setMessageContent('Delete success.')
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   const columns = useMemo(
@@ -63,7 +88,7 @@ const SongList = () => {
         accessor: (_row: any, i: number) => i + 1,
       },
       {
-        Header: 'Song ID',
+        Header: '_Song ID',
         accessor: 'song_id',
       },
       {
@@ -75,16 +100,26 @@ const SongList = () => {
         accessor: 'audio_path',
       },
       {
-        Header: 'Action',
+        Header: '',
         accessor: 'action',
         Cell: (props) => (
-          <Button
-            colorScheme="teal"
-            size="sm"
-            onClick={() => handleSelectSong(props.row.values.song_id)}
-          >
-            Edit
-          </Button>
+          <>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              onClick={() => handleEditSong(props.row.values.song_id)}
+              mr={2}
+            >
+              Edit
+            </Button>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              onClick={() => handleDeleteSong(props.row.values.song_id)}
+            >
+              Delete
+            </Button>
+          </>
         ),
       },
     ],
@@ -113,9 +148,16 @@ const SongList = () => {
 
   return (
     <Flex flexGrow={1} justifyContent="flex-start" flexDirection="column">
+      <Notification message={message} />
       <Text fontSize="3xl" mb={4}>
         Daftar Lagu Premium
       </Text>
+      <VStack align='flex-start'>
+        <Button onClick={handleAddSong} colorScheme="teal" size="sm">
+          Tambah Lagu
+        </Button>
+        {isAdd ? <AddSong/> : null}
+      </VStack>
       <TableContainer>
         <Table {...getTableProps()}>
           <Thead>

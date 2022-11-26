@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 const EditSong: React.FC = () => {
-  const url = 'http://127.0.0.1:3000'
+  const baseUrl = import.meta.env.VITE_BASE_REST_URL
 
   const { singerid, songid } = useParams()
 
@@ -24,9 +24,10 @@ const EditSong: React.FC = () => {
 
   const fetchSong = async () => {
     try {
-      const res = await axios.get(`${url}/singer/${singerid}/songs/${songid}`)
-      setSongTitle(res.data[0].judul)
-      setSongPath(res.data[0].audio_path)
+      const res = await axios.get(`${baseUrl}/singer/${singerid}/songs/${songid}`)
+      setSongTitle(res.data.judul)
+      setSongPath(res.data.audio_path)
+      console.log('data', res.data)
     } catch (err) {
       console.error(err)
     }
@@ -41,8 +42,8 @@ const EditSong: React.FC = () => {
     }
     console.log('payload', payload)
     try {
-      const res = await axios.post(
-        `${url}/singer/${singerid}/songs/${songid}`,
+      const res = await axios.put(
+        `${baseUrl}/singer/${singerid}/songs/${songid}`,
         payload
       )
     } catch (err) {
