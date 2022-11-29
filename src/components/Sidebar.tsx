@@ -1,26 +1,30 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { Routing } from '../routing';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Routing } from '../routing'
+import { Box, List, ListItem } from '@chakra-ui/react'
 
 const Sidebar = () => {
   const [path, setPath] = useState('/')
   const singerID = 1
 
-  return (
-    <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to={'/'}>Home</Link>
-          </li>
-          <li>
-            <Link to={`/singer/${singerID}/songs`}>Song List</Link>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  );
-};
+  const navItem = [
+    { path: '/', title: 'Home' },
+    { path: `/singer/${singerID}/songs`, title: 'Song List' },
+  ]
 
-export default Sidebar;
+  return (
+    <List w="full" fontSize="xl" pt={4}>
+      {navItem.map((item) => (
+        <ListItem
+        pl={4} py={2}
+          _hover={{ backgroundColor: 'gray.300', color: 'black' }}
+        >
+          <Link to={item.path}><Box w="full">{item.title}</Box></Link>
+        </ListItem>
+      ))}
+    </List>
+  )
+}
+
+export default Sidebar

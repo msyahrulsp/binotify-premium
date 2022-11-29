@@ -8,11 +8,10 @@ import {
   HStack,
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-import React, { useContext, useState } from 'react'
-import { storage } from './firebase'
+import { useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { MessageContext } from '../../App'
+import { uploadFile } from '../../util/helper'
 
 const AddSong = () => {
   const { message, setMessageContent } = useContext(MessageContext)
@@ -22,37 +21,6 @@ const AddSong = () => {
 
   const baseUrl = import.meta.env.VITE_BASE_REST_URL
 
-  const uploadFile = (file, date) => {
-    return new Promise((resolve, reject) => {
-      if (file) {
-        const storageRef = ref(storage, `files/${file.name} - ${date}`)
-        const uploadTask = uploadBytesResumable(storageRef, file)
-
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            const prog = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            )
-            setProgress(prog)
-          },
-          (err) => {
-            console.log(err)
-            reject(err)
-          },
-          async () => {
-            const donwloadURL = await getDownloadURL(uploadTask.snapshot.ref)
-            setProgress(0)
-            console.log('download url setted')
-            resolve(donwloadURL)
-          }
-        )
-      } else {
-        reject('broken files')
-      }
-    })
-  }
-
   const addSongToDB = async (judul, audio_path, penyanyi_id) => {
     // using REST API
     try {
@@ -61,8 +29,11 @@ const AddSong = () => {
         audio_path: audio_path,
         penyanyi_id: penyanyi_id,
       }
-      const res = await axios.post(`${baseUrl}/singer/${singerid}/songs`, payload)
-      
+      const res = await axios.post(
+        `${baseUrl}/singer/${singerid}/songs`,
+        payload
+      )
+
       console.log('song added', res.data)
     } catch (err) {
       console.error(err)
@@ -75,11 +46,11 @@ const AddSong = () => {
     const file = e.target[1].files[0]
     const fileDate = file.lastModifiedDate.toISOString()
 
-    uploadFile(file, fileDate).then((songPath) => {
+    uploadFile(file, fileDate, setProgress).then((songPath) => {
       addSongToDB(songTitle, songPath, singerid)
-      setMessageContent('New song is added.')
+      setMessageContent('Lagu baru berhasil ditambahkan.')
       setSongTitle('')
-      e.target.reset();
+      e.target.reset()
     })
   }
 

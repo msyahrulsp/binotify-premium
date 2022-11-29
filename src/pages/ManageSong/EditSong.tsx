@@ -10,21 +10,31 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { MessageContext } from '../../App'
+import { uploadFile } from '../../util/helper'
+import Notification from '../../components/Notification'
 
 const EditSong: React.FC = () => {
   const baseUrl = import.meta.env.VITE_BASE_REST_URL
 
   const { singerid, songid } = useParams()
 
-  // const [song, setSong] = useState(null)
-  const [songTitle, setSongTitle] = useState(null)
-  const [songPath, setSongPath] = useState(null)
+  const [songTitle, setSongTitle] = useState('')
+  const [songPath, setSongPath] = useState('')
+  const [progress, setProgress] = useState(0)
+  const { message, setMessageContent } = useContext(MessageContext)
+
+  useEffect(() => {
+    fetchSong()
+  }, [])
 
   const fetchSong = async () => {
     try {
-      const res = await axios.get(`${baseUrl}/singer/${singerid}/songs/${songid}`)
+      const res = await axios.get(
+        `${baseUrl}/singer/${singerid}/songs/${songid}`
+      )
       setSongTitle(res.data.judul)
       setSongPath(res.data.audio_path)
       console.log('data', res.data)
@@ -33,7 +43,7 @@ const EditSong: React.FC = () => {
     }
   }
 
-  const saveSong = async () => {
+  const saveSongToDB = async (songTitle, songPath, singerid) => {
     const payload = {
       song_id: parseInt(songid),
       judul: songTitle,
@@ -46,30 +56,42 @@ const EditSong: React.FC = () => {
         `${baseUrl}/singer/${singerid}/songs/${songid}`,
         payload
       )
+      console.log('song added', res.data)
     } catch (err) {
       console.error(err)
     }
   }
 
-  useEffect(() => {
-    fetchSong()
-  }, [])
-
   const handleSongTitle = (event) => {
     setSongTitle(event.target.value)
   }
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    // post to endpoint that insert new song data
-    setSongTitle(songTitle)
-    setSongPath(songPath)
-    saveSong()
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    const file = e.target[1].files[0]
+
+    if (file) {
+      const fileDate = file.lastModifiedDate.toISOString()
+      uploadFile(file, fileDate, setProgress).then((songPath) => {
+        setSongPath(songPath)
+        setMessageContent('Lagu telah diperbarui.')
+        setSongTitle(songTitle)
+        saveSongToDB(songTitle, songPath, singerid)
+      })
+    } else {
+      setMessageContent('Lagu telah diperbarui.')
+      setSongTitle(songTitle)
+      saveSongToDB(songTitle, songPath, singerid)
+    }
   }
 
   return (
     <Flex flexGrow={1} justifyContent="flex-start" flexDirection="column">
-      {singerid} {songid}
+      <Notification message={message} />
+      <Text>
+        singerid: {singerid} songid: {songid}
+      </Text>
       <Text fontSize="3xl" mb={4}>
         Edit Lagu
       </Text>
@@ -84,12 +106,14 @@ const EditSong: React.FC = () => {
             />
           </FormControl>
           <FormControl>
-            <FormLabel>Audio Path</FormLabel>
-            <Text mb={2}>
-              Audio Path {songPath ? songPath : 'Loading...'}
-            </Text>{' '}
+            <FormLabel>
+              Audio Path
+              <br />
+            </FormLabel>
+            <Text maxW="container.lg" mb={2}>{songPath ? songPath : 'Loading...'}</Text>{' '}
             <Input type="file" />
           </FormControl>
+          {progress === 0 ? null : <Text>Uploading {progress}%</Text>}
           <Button colorScheme="teal" size="sm" type="submit">
             Save
           </Button>

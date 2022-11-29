@@ -10,7 +10,7 @@ const Root = () => {
 
   return (
     <Flex minH="100vh">
-      <VStack bgColor="blackAlpha.900" color="white" minW="40">
+      <VStack bgColor="gray.100" color="black" minW="40">
         <Sidebar/>
       </VStack>
       <Flex
@@ -20,7 +20,6 @@ const Root = () => {
         pt={8}
         px={8}
       >
-        <p>{state}</p>
         {pathname === '/' ? <HomePage/> : <Outlet />}
       </Flex>
     </Flex>

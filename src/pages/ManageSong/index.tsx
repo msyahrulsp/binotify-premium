@@ -34,7 +34,7 @@ const SongList = () => {
   const navigate = useNavigate()
 
   const [songs, setSongs] = useState([])
-  const [isAdd, setIsAdd] = useState(true)
+  const [isAdd, setIsAdd] = useState(false)
   const { message, setMessageContent } = useContext(MessageContext)
 
   const baseUrl = import.meta.env.VITE_BASE_REST_URL
@@ -103,7 +103,7 @@ const SongList = () => {
         Header: '',
         accessor: 'action',
         Cell: (props) => (
-          <>
+          <HStack whiteSpace="unset">
             <Button
               colorScheme="teal"
               size="sm"
@@ -119,14 +119,23 @@ const SongList = () => {
             >
               Delete
             </Button>
-          </>
+          </HStack>
         ),
       },
     ],
     []
   )
 
-  const tableInstance = useTable({ columns, data }, usePagination)
+  const tableInstance = useTable(
+    {
+      columns,
+      data,
+      initialState: {
+        hiddenColumns: ['song_id']
+      },
+    },
+    usePagination
+  )
 
   const {
     getTableProps,
@@ -147,16 +156,16 @@ const SongList = () => {
   } = tableInstance
 
   return (
-    <Flex flexGrow={1} justifyContent="flex-start" flexDirection="column">
+    <Flex flexGrow={1} justifyContent="flex-start" flexDirection="column" maxW="container.lg" margin="auto" w="full">
       <Notification message={message} />
       <Text fontSize="3xl" mb={4}>
         Daftar Lagu Premium
       </Text>
-      <VStack align='flex-start'>
+      <VStack align="flex-start">
         <Button onClick={handleAddSong} colorScheme="teal" size="sm">
           Tambah Lagu
         </Button>
-        {isAdd ? <AddSong/> : null}
+        {isAdd ? <AddSong /> : null}
       </VStack>
       <TableContainer>
         <Table {...getTableProps()}>
@@ -178,7 +187,9 @@ const SongList = () => {
                 <Tr {...row.getRowProps()}>
                   {row.cells.map((cell) => {
                     return (
-                      <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                      <Td whiteSpace="normal" wordBreak="break-all" {...cell.getCellProps()}>
+                        {cell.render('Cell')}
+                      </Td>
                     )
                   })}
                 </Tr>
