@@ -93,6 +93,7 @@ const Sidebar = () => {
                     }}
                     borderLeft={isMatch ? '5px solid #1DB954' : 'none'}
                     pl={isMatch ? 3 : 0}
+                    transition='all 0.25s ease-in-out'
                   >
                     {item.icon}
                     <Text>{item.label}</Text>
@@ -102,7 +103,8 @@ const Sidebar = () => {
             })}
           </VStack>
           <HStack
-            mt={16}
+            position='fixed'
+            bottom={10}
             alignItems='center'
             _hover={{ opacity: 0.8 }}
             onClick={handleLogout}
