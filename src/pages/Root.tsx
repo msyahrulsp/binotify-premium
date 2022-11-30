@@ -8,7 +8,11 @@ const Root = () => {
   const { pathname, state } = useLocation();
 
   return (
-    <Flex minH='full'>
+    <Flex
+      minH='full'
+      background='linear-gradient(to bottom, #87be8e, #1a1a1a)'
+      color='white'
+    >
       <Sidebar />
       <Flex
         flexGrow={1}

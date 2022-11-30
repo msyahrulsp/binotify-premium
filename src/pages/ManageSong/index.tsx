@@ -171,6 +171,7 @@ const SongList = () => {
       maxW='container.lg'
       margin='auto'
       w='full'
+      paddingBottom={10}
     >
       <Notification message={message} />
       <Text fontSize='3xl' mb={4}>

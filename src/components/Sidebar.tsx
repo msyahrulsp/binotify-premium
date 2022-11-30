@@ -64,6 +64,7 @@ const Sidebar = () => {
       h='100vh'
       w='fit-content'
       borderRightRadius='xl'
+      boxShadow='dark-lg'
     >
       <Link to='/'>
         <HStack flexDirection='row'>
