@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Button,
   Center,
@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { postDataAPI } from '../../util/api';
 import { AppContextProps } from '../../@types/context';
 import { AppContext } from '../../context/AppContext';
+import { useAuth } from '../../hooks/useAuth';
 
 export const PasswordInput = ({
   label,
@@ -61,6 +62,7 @@ const Register = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { setUser } = useContext(AppContext) as AppContextProps;
+  const { user } = useAuth();
 
   const [name, setName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
@@ -99,6 +101,20 @@ const Register = () => {
       });
     }
   };
+
+  useEffect(() => {
+    document.title = 'Register - Binotify Premium';
+    if (user !== null) {
+      navigate('/');
+      toast({
+        title: 'Warning',
+        description: 'Kamu sudah login',
+        status: 'warning',
+        position: 'top',
+        isClosable: true
+      });
+    }
+  }, [user]);
 
   return (
     <Center>
