@@ -1,26 +1,30 @@
-import { ChakraProvider } from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Routing } from './routing'
-
-export const MessageContext = React.createContext(null)
-const router = createBrowserRouter(Routing)
+import { ChakraProvider } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Routing } from './routing';
+import { AppContext } from './context/AppContext';
+import { IUser } from './@types/user';
 
 const App = () => {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
+  const [user, setUser] = useState<IUser | null>(null);
 
-  const setMessageContent = (val) => {
-    setMessage(val)
-    setTimeout(() => setMessage(''), 3000)
-  }
+  const router = createBrowserRouter(Routing);
+
+  const setMessageContent = (val: string) => {
+    setMessage(val);
+    setTimeout(() => setMessage(''), 3000);
+  };
 
   return (
     <ChakraProvider>
-      <MessageContext.Provider value={{ message, setMessageContent }}>
+      <AppContext.Provider
+        value={{ message, setMessageContent, user, setUser }}
+      >
         <RouterProvider router={router} />
-      </MessageContext.Provider>
+      </AppContext.Provider>
     </ChakraProvider>
-  )
-}
+  );
+};
 
-export default App
+export default App;

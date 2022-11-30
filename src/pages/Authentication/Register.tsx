@@ -1,5 +1,4 @@
-import { useState } from "react";
-import http from "../../util/http";
+import { useContext, useState } from 'react';
 import {
   Button,
   Center,
@@ -13,13 +12,17 @@ import {
   Link,
   InputGroup,
   InputRightElement,
-} from "@chakra-ui/react";
-import { RiEyeLine, RiEyeCloseLine } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+  useToast
+} from '@chakra-ui/react';
+import { RiEyeLine, RiEyeCloseLine } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
+import { postDataAPI } from '../../util/api';
+import { AppContextProps } from '../../@types/context';
+import { AppContext } from '../../context/AppContext';
 
 export const PasswordInput = ({
   label,
-  onChange,
+  onChange
 }: {
   label: string;
   onChange: (e: any) => void;
@@ -38,14 +41,14 @@ export const PasswordInput = ({
     <FormControl>
       <FormLabel>{label}</FormLabel>
       <InputGroup>
-        <Input type={show ? "text" : "password"} onChange={onChange} />
+        <Input type={show ? 'text' : 'password'} onChange={onChange} />
         <InputRightElement
           onClick={handleShow}
           children={
             show ? (
-              <RiEyeCloseLine cursor="pointer" />
+              <RiEyeCloseLine cursor='pointer' />
             ) : (
-              <RiEyeLine cursor="pointer" />
+              <RiEyeLine cursor='pointer' />
             )
           }
         />
@@ -56,28 +59,44 @@ export const PasswordInput = ({
 
 const Register = () => {
   const navigate = useNavigate();
+  const toast = useToast();
+  const { setUser } = useContext(AppContext) as AppContextProps;
 
-  const [name, setName] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
-    const data = {
+    const payload = {
       name,
       username,
       email,
       password,
-      confirm_password: confirmPassword,
+      confirm_password: confirmPassword
     };
     try {
-      const response = await http.post("/auth/register", data);
-      localStorage.setItem("token", response.data.data.token);
-      navigate("/");
+      const response = await postDataAPI('/auth/register', { payload });
+      localStorage.setItem('token', response.data.token);
+      setUser(response.data.user);
+      toast({
+        title: 'Success',
+        description: response.message,
+        status: 'success',
+        position: 'top',
+        isClosable: true
+      });
+      navigate('/');
     } catch (err: any) {
-      console.log(err.response.data);
+      toast({
+        title: 'Error',
+        description: err.response?.data.message ?? err.message,
+        status: 'error',
+        position: 'top',
+        isClosable: true
+      });
     }
   };
 
@@ -85,39 +104,39 @@ const Register = () => {
     <Center>
       <Stack>
         <form onSubmit={handleRegister}>
-          <Flex direction="column" w="360px" gap="3" pt="10">
-            <Heading textAlign="center">Binotify</Heading>
+          <Flex direction='column' w='360px' gap='3' pt='10'>
+            <Heading textAlign='center'>Binotify</Heading>
             <FormControl>
               <FormLabel>Full Name</FormLabel>
-              <Input type="text" onChange={(e) => setName(e.target.value)} />
+              <Input type='text' onChange={(e) => setName(e.target.value)} />
             </FormControl>
             <FormControl>
               <FormLabel>Username</FormLabel>
               <Input
-                type="text"
+                type='text'
                 onChange={(e) => setUsername(e.target.value)}
               />
             </FormControl>
             <FormControl>
               <FormLabel>Email</FormLabel>
-              <Input type="email" onChange={(e) => setEmail(e.target.value)} />
+              <Input type='email' onChange={(e) => setEmail(e.target.value)} />
             </FormControl>
             <PasswordInput
-              label="Password"
+              label='Password'
               onChange={(e) => setPassword(e.target.value)}
             />
             <PasswordInput
-              label="ConfirmPassword"
+              label='ConfirmPassword'
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </Flex>
-          <Text fontStyle="italic" fontSize="sm">
-            Already have an account?{" "}
-            <Link color="blue" href="/login">
+          <Text fontStyle='italic' fontSize='sm'>
+            Already have an account?{' '}
+            <Link color='blue' href='/login'>
               Log In
             </Link>
           </Text>
-          <Button colorScheme="teal" mt="2" type="submit">
+          <Button colorScheme='teal' mt='2' type='submit'>
             Register
           </Button>
         </form>
