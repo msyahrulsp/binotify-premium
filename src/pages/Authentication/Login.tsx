@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -14,15 +14,14 @@ import {
   useToast
 } from '@chakra-ui/react';
 import { PasswordInput } from './Register';
-import { AppContext } from '../../context/AppContext';
-import { AppContextProps } from '../../@types/context';
-import { postDataAPI } from '../../util/api';
+import { useAuth } from '../../hooks/useAuth';
 
 const Login = () => {
-  const navigate = useNavigate();
   const [userCred, setUserCred] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { setUser } = useContext(AppContext) as AppContextProps;
+  const { login, user } = useAuth();
+
+  const navigate = useNavigate();
   const toast = useToast();
 
   const handleLogin = async (e: any) => {
@@ -31,35 +30,27 @@ const Login = () => {
       user: userCred,
       password: password
     };
+
     try {
-      const response = await postDataAPI('/auth/login', {
-        payload
-      });
-      // TODO: handle pake hooks per page
-      localStorage.setItem('token', response.data.token);
-      setUser(response.data.user);
-      toast({
-        title: 'Success',
-        description: response.message,
-        status: 'success',
-        position: 'top',
-        isClosable: true
-      });
-      navigate('/');
+      await login(payload);
     } catch (err: any) {
-      toast({
-        title: 'Error',
-        description: err.response?.data.message ?? err.message,
-        status: 'error',
-        position: 'top',
-        isClosable: true
-      });
+      console.log(err);
     }
   };
 
   useEffect(() => {
     document.title = 'Login - Binotify Premium';
-  }, []);
+    if (user !== null) {
+      navigate('/');
+      toast({
+        title: 'Warning',
+        description: 'Kamu sudah login',
+        status: 'warning',
+        position: 'top',
+        isClosable: true
+      });
+    }
+  }, [user]);
 
   return (
     <Center>
