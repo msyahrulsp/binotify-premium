@@ -8,18 +8,8 @@ const Root = () => {
   const { pathname, state } = useLocation();
 
   return (
-    <Flex minH='100vh' position='relative'>
-      <VStack
-        position='fixed'
-        top={0}
-        left={0}
-        bgColor='black'
-        color='white'
-        minW='40'
-        h='full'
-      >
-        <Sidebar />
-      </VStack>
+    <Flex minH='full'>
+      <Sidebar />
       <Flex
         flexGrow={1}
         justifyContent='flex-start'
