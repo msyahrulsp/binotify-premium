@@ -1,8 +1,6 @@
 import { useToast } from '@chakra-ui/react';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppContextProps } from '../@types/context';
-import { AppContext } from '../context/AppContext';
 import { AuthResponse, useAuth } from './useAuth';
 
 export enum Access {
@@ -13,14 +11,15 @@ export enum Access {
 export const useRole = (access: Access) => {
   const toast = useToast();
   const navigate = useNavigate();
-  const isAdmin = access === Access.ADMIN;
-  const { user } = useContext(AppContext) as AppContextProps;
   const { logout, validateToken } = useAuth();
   const [haveAccess, setHaveAccess] = useState(false);
 
   const checkRole = async () => {
     const validate = await validateToken();
-    if (validate !== AuthResponse.VALID_TOKEN) {
+    if (
+      validate !== AuthResponse.ADMIN_TOKEN &&
+      validate !== AuthResponse.SINGER_TOKEN
+    ) {
       navigate('/login');
       logout();
 
@@ -37,7 +36,8 @@ export const useRole = (access: Access) => {
       return;
     }
 
-    if (user?.isAdmin !== isAdmin) {
+    const tokenAccess = validate.split('_')[0];
+    if (tokenAccess !== access) {
       navigate('/');
       toast({
         title: 'Error',

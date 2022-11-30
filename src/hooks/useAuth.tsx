@@ -9,7 +9,8 @@ import { postDataAPI } from '../util/api';
 export enum AuthResponse {
   NO_TOKEN = 'NO_TOKEN',
   INVALID_TOKEN = 'INVALID',
-  VALID_TOKEN = 'VALID'
+  ADMIN_TOKEN = 'ADMIN_TOKEN',
+  SINGER_TOKEN = 'SINGER_TOKEN'
 }
 
 export const useAuth = () => {
@@ -46,7 +47,10 @@ export const useAuth = () => {
           payload
         });
         setUser(data);
-        return AuthResponse.VALID_TOKEN;
+        if (!data.isAdmin) {
+          return AuthResponse.SINGER_TOKEN;
+        }
+        return AuthResponse.ADMIN_TOKEN;
       } catch (err: any) {
         console.log(err);
         return AuthResponse.INVALID_TOKEN;

@@ -1,5 +1,5 @@
 export type IUser = {
-  userId?: number;
+  user_id?: number;
   isAdmin?: boolean;
 };
 

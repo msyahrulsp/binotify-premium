@@ -15,8 +15,7 @@ import {
 import { useAuth } from '../hooks/useAuth';
 
 const Sidebar = () => {
-  const { user } = useContext(AppContext) as AppContextProps;
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const role = user?.isAdmin ? Access.ADMIN : Access.SINGER;
   const toast = useToast();
 
@@ -32,7 +31,7 @@ const Sidebar = () => {
     SINGER: [
       { path: '/', label: 'Dashboard', icon: <MdOutlineDashboard size={25} /> },
       {
-        path: `/songs`,
+        path: `/singer/${user?.user_id}/songs`,
         label: 'Song List',
         icon: <MdFormatListBulleted size={25} />
       }
@@ -53,7 +52,7 @@ const Sidebar = () => {
   return (
     <Flex
       px={8}
-      py={5}
+      py={6}
       bg='black'
       color='white'
       flexWrap='wrap'
@@ -64,34 +63,35 @@ const Sidebar = () => {
       flexDirection='column'
       h='100vh'
       w='fit-content'
+      borderRightRadius='xl'
     >
       <Link to='/'>
         <HStack flexDirection='row'>
           <Image
-            boxSize='50px'
+            boxSize='40px'
             objectFit='cover'
             src='../../public/spotify.png'
             alt='logo'
           />
-          <Text fontSize='xl' fontWeight='bold'>
+          <Text fontSize='2xl' fontWeight='bold'>
             Premium
           </Text>
         </HStack>
       </Link>
       {user !== null ? (
         <Flex flexDirection='column'>
-          <VStack mt={8} spacing={5} alignItems='flex-start'>
-            {navItem[role].map((item) => {
+          <VStack mt={8} spacing={8} alignItems='flex-start'>
+            {navItem[role].map((item, idx) => {
               const location = window.location.pathname;
               const isMatch = matchPath({ path: item.path }, location);
 
               return (
-                <Link to={item.path}>
+                <Link to={item.path} key={`${item}-${idx}`}>
                   <HStack
                     _hover={{
                       opacity: 0.8
                     }}
-                    borderLeft={isMatch ? '5px solid #1DB954' : 'none'}
+                    borderLeft={isMatch ? '8px solid #1DB954' : 'none'}
                     pl={isMatch ? 3 : 0}
                     transition='all 0.25s ease-in-out'
                   >

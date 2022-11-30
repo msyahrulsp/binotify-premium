@@ -10,7 +10,7 @@ export const SubscriptionPage = () => {
     document.title = 'Subscription - Binotify Premium';
   }, []);
 
-  if (haveAccess) return <Loading />;
+  if (!haveAccess) return <Loading />;
 
   return (
     <Flex

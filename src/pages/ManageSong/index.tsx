@@ -21,6 +21,8 @@ import { AppContext } from '../../context/AppContext';
 import { AppContextProps } from '../../@types/context';
 import Notification from '../../components/Notification';
 import AddSong from './AddSong';
+import { Access, useRole } from '../../hooks/useRole';
+import { Loading } from '../../components/Loading';
 
 const SongList = () => {
   /**
@@ -32,6 +34,7 @@ const SongList = () => {
    * pagination pada halaman ini dengan jumlah lagu per halaman yang kalian tentukan sendiri. Pagination boleh diimplementasikan secara server-side maupun client-side
    */
   const { singerid } = useParams();
+  const { haveAccess } = useRole(Access.SINGER);
   const navigate = useNavigate();
 
   const [songs, setSongs] = useState([]);
@@ -157,6 +160,8 @@ const SongList = () => {
     setPageSize,
     state: { pageIndex, pageSize }
   } = tableInstance;
+
+  if (!haveAccess) return <Loading />;
 
   return (
     <Flex
