@@ -8,9 +8,10 @@ const Root = () => {
 
   return (
     <Flex
-      minH='full'
+      minH='100vh'
       background='linear-gradient(to bottom, #87be8e, #1a1a1a)'
       color='white'
+      flexDirection={{ base: 'column-reverse', lg: 'row' }}
     >
       <Sidebar />
       <Flex

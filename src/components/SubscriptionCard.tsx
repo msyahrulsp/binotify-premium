@@ -1,13 +1,5 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  HStack,
-  Text,
-  VStack
-} from '@chakra-ui/react';
-import { MdQuestionAnswer, MdCancel } from 'react-icons/md';
+import { Box, Button, Container, HStack, Text, VStack } from '@chakra-ui/react';
+import { MdQuestionAnswer } from 'react-icons/md';
 import { ConfirmModal } from './Modal';
 
 export const SubscriptionCard = () => {
@@ -24,6 +16,7 @@ export const SubscriptionCard = () => {
       maxW='500px'
       background='hsla(0,0%,100%,.3)'
       justifyContent='space-between'
+      flexWrap='wrap'
     >
       <VStack alignItems='flex-start'>
         <HStack>
@@ -41,7 +34,11 @@ export const SubscriptionCard = () => {
       </VStack>
       <Box>
         <ConfirmModal>
-          <Button colorScheme='green' leftIcon={<MdQuestionAnswer />}>
+          <Button
+            colorScheme='green'
+            size={{ base: 'sm', sm: 'md' }}
+            leftIcon={<MdQuestionAnswer />}
+          >
             Aksi
           </Button>
         </ConfirmModal>

@@ -16,7 +16,7 @@ export const SubscriptionPage = () => {
 
   return (
     <Flex minH='80vh' flexDirection='column' alignItems='center'>
-      <Text as='b' fontSize='2xl'>
+      <Text as='b' fontSize='2xl' align='center'>
         Subscription List Request
       </Text>
       <VStack spacing={5} mt={5} w='100%'>
