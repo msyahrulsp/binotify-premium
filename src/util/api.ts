@@ -1,22 +1,7 @@
 import Axios from 'axios';
 import { IAPI } from '../@types/api';
 
-export const getDataAPI = async (
-  path: string,
-  { params, authorization }: IAPI
-) => {
-  if (authorization) {
-    const { data } = await Axios.get(
-      `${import.meta.env.VITE_BASE_REST_URL}${path}`,
-      {
-        headers: {
-          Authorization: `${authorization}`
-        },
-        params
-      }
-    );
-    return data;
-  }
+export const getDataAPI = async (path: string, { params }: IAPI) => {
   const { data } = await Axios.get(
     `${import.meta.env.VITE_BASE_REST_URL}${path}`,
     {
@@ -26,26 +11,18 @@ export const getDataAPI = async (
   return data;
 };
 
-export const postDataAPI = async (
-  path: string,
-  { payload, authorization }: IAPI
-) => {
-  if (authorization) {
-    const { data } = await Axios.post(
-      `${import.meta.env.VITE_BASE_REST_URL}${path}`,
-      payload,
-      {
-        headers: {
-          Authorization: `${authorization}`
-        }
-      }
-    );
-    return data;
-  } else {
-    const { data } = await Axios.post(
-      `${import.meta.env.VITE_BASE_REST_URL}${path}`,
-      payload
-    );
-    return data;
-  }
+export const postDataAPI = async (path: string, { payload }: IAPI) => {
+  const { data } = await Axios.post(
+    `${import.meta.env.VITE_BASE_REST_URL}${path}`,
+    payload
+  );
+  return data;
+};
+
+export const putDataAPI = async (path: string, { payload }: IAPI) => {
+  const { data } = await Axios.put(
+    `${import.meta.env.VITE_BASE_REST_URL}${path}`,
+    payload
+  );
+  return data;
 };

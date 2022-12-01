@@ -1,9 +1,14 @@
 import { Box, Button, Container, HStack, Text, VStack } from '@chakra-ui/react';
 import { MdQuestionAnswer } from 'react-icons/md';
-import { ConfirmModal } from './Modal';
+import { ISubscription } from '../@types/api';
+import { ActionModal } from './Modal';
 
-export const SubscriptionCard = () => {
-  const a = 1;
+export const SubscriptionCard = ({
+  creator_id,
+  creator_name,
+  subscriber_id,
+  handleUpdate
+}: ISubscription) => {
   return (
     <Container
       display='flex'
@@ -14,26 +19,31 @@ export const SubscriptionCard = () => {
       boxShadow='4px 5px 5px -2px rgba(0,0,0,0.75)'
       alignItems='center'
       maxW='500px'
-      background='hsla(0,0%,100%,.3)'
+      background='hsla(0,0%,100%,.1)'
       justifyContent='space-between'
       flexWrap='wrap'
+      border='1px solid #000'
     >
       <VStack alignItems='flex-start'>
         <HStack>
           <Text as='b' w='60px'>
             Singer
           </Text>
-          <Text>username</Text>
+          <Text>{creator_name}</Text>
         </HStack>
         <HStack>
           <Text as='b' w='60px'>
-            User
+            User ID
           </Text>
-          <Text>email</Text>
+          <Text>{subscriber_id}</Text>
         </HStack>
       </VStack>
       <Box>
-        <ConfirmModal>
+        <ActionModal
+          creator_id={creator_id}
+          subscriber_id={subscriber_id}
+          handleUpdate={handleUpdate}
+        >
           <Button
             colorScheme='green'
             size={{ base: 'sm', sm: 'md' }}
@@ -41,7 +51,7 @@ export const SubscriptionCard = () => {
           >
             Aksi
           </Button>
-        </ConfirmModal>
+        </ActionModal>
       </Box>
     </Container>
   );
