@@ -117,8 +117,18 @@ const Register = () => {
   }, [user]);
 
   return (
-    <Center>
-      <Stack>
+    <Center
+      minH='100vh'
+      background='linear-gradient(to bottom, #87be8e, #1a1a1a)'
+      color='white'
+    >
+      <Stack
+        mt={-20}
+        background='rgba(0, 0, 0, 0.85)'
+        px={10}
+        pb={10}
+        borderRadius='lg'
+      >
         <form onSubmit={handleRegister}>
           <Flex direction='column' w='360px' gap='3' pt='10'>
             <Heading textAlign='center'>Binotify</Heading>
@@ -148,11 +158,17 @@ const Register = () => {
           </Flex>
           <Text fontStyle='italic' fontSize='sm'>
             Already have an account?{' '}
-            <Link color='blue' href='/login'>
+            <Link
+              color='#CAC1B4'
+              href='/login'
+              textUnderlineOffset={4}
+              textDecoration='underline'
+              _hover={{ color: 'white' }}
+            >
               Log In
             </Link>
           </Text>
-          <Button colorScheme='teal' mt='2' type='submit'>
+          <Button colorScheme='teal' mt='8' type='submit' w='100%'>
             Register
           </Button>
         </form>

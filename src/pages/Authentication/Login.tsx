@@ -53,8 +53,18 @@ const Login = () => {
   }, [user]);
 
   return (
-    <Center>
-      <Stack w='370px' px='3'>
+    <Center
+      minH='100vh'
+      background='linear-gradient(to bottom, #87be8e, #1a1a1a)'
+      color='white'
+    >
+      <Stack
+        mt={-20}
+        background='rgba(0, 0, 0, 0.85)'
+        px={10}
+        pb={10}
+        borderRadius='lg'
+      >
         <form onSubmit={handleLogin}>
           <Flex direction='column' gap='3' pt='10'>
             <Heading textAlign='center'>Binotify</Heading>
@@ -72,11 +82,17 @@ const Login = () => {
           </Flex>
           <Text fontStyle='italic' fontSize='sm'>
             Don't have an account?{' '}
-            <Link color='blue' href='/register'>
+            <Link
+              color='#CAC1B4'
+              href='/register'
+              textUnderlineOffset={4}
+              textDecoration='underline'
+              _hover={{ color: 'white' }}
+            >
               Register an account
             </Link>
           </Text>
-          <Button colorScheme='teal' mt='2' type='submit'>
+          <Button colorScheme='teal' mt='8' type='submit' w='100%'>
             Login
           </Button>
         </form>
