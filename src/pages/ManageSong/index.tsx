@@ -20,25 +20,17 @@ import { useTable, usePagination } from 'react-table';
 import { AppContext } from '../../context/AppContext';
 import { AppContextProps } from '../../@types/context';
 import Notification from '../../components/Notification';
-import AddSong from './AddSong';
 import { Access, useRole } from '../../hooks/useRole';
 import { Loading } from '../../components/Loading';
+import { FaPlus } from 'react-icons/fa';
+import AddSongModal from '../../components/Modal/AddSongModal';
+import EditSongModal from '../../components/Modal/EditSongModal';
 
 const SongList = () => {
-  /**
-   * penyanyi dapat melihat daftar lagu-lagu premium miliknya
-   * dapat diakses penyanyi untuk mengelola lagu-lagu mereka
-   * penyanyi dapat menambah, menghapus, mengubah lagu-lagu premium yang ditawarkan
-   * lagu-lagu yang dapat dikelola seorang penyanyi adalah lagu-lagu mereka sendiri, penyanyi tidak dapat mengelola lagu penyanyi lain
-   * Field yang dapat diedit oleh penyanyi adalah judul dan juga file audio lagu tersebut
-   * pagination pada halaman ini dengan jumlah lagu per halaman yang kalian tentukan sendiri. Pagination boleh diimplementasikan secara server-side maupun client-side
-   */
   const { singerid } = useParams();
   const { haveAccess } = useRole(Access.SINGER);
-  const navigate = useNavigate();
 
   const [songs, setSongs] = useState([]);
-  const [isAdd, setIsAdd] = useState(false);
   const { message, setMessageContent } = useContext(
     AppContext
   ) as AppContextProps;
@@ -55,21 +47,70 @@ const SongList = () => {
   };
 
   useEffect(() => {
+    document.title = 'Manage Song - Binotify Premium';
     fetchSongs();
   }, []);
 
   const data = useMemo(() => songs, [songs]);
 
-  const handleAddSong = () => {
-    setIsAdd(!isAdd);
+  const addSongToDB = async (
+    judul: string,
+    audio_path: string,
+    penyanyi_id: any
+  ) => {
+    try {
+      const payload = {
+        judul: judul,
+        audio_path: audio_path,
+        penyanyi_id: penyanyi_id
+      };
+      const { data } = await axios.post(
+        `${baseUrl}/singer/${singerid}/songs`,
+        payload
+      );
+      // @ts-ignore
+      setSongs([...songs, data.data]);
+      console.log(data.data);
+      setMessageContent('Berhasil menambah lagu');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleEditSong = (songID) => {
-    // handler for selected song to redirect to edit page
-    navigate(`/singer/${singerid}/songs/${songID}`);
+  const saveSongToDB = async (
+    songTitle: string,
+    songPath: string,
+    singerid: any,
+    songid: any
+  ) => {
+    const payload = {
+      // @ts-ignore
+      song_id: parseInt(songid),
+      judul: songTitle,
+      penyanyi_id: singerid,
+      audio_path: songPath
+    };
+    try {
+      const res = await axios.put(
+        `${baseUrl}/singer/${singerid}/songs/${songid}`,
+        payload
+      );
+      setSongs((prevState: any) => {
+        const newState = prevState.map((song: any) => {
+          if (song.song_id === songid) {
+            return { song_id: songid, judul: songTitle, audio_path: songPath };
+          }
+          return song;
+        });
+        return newState;
+      });
+      setMessageContent('Berhasil mengubah lagu');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleDeleteSong = async (songID) => {
+  const handleDeleteSong = async (songID: any) => {
     // handler to delete song
     try {
       const res = await axios.delete(
@@ -77,6 +118,7 @@ const SongList = () => {
       );
 
       setSongs((prevState) =>
+        // @ts-ignore
         prevState.filter((prevState) => prevState.song_id !== songID)
       );
 
@@ -108,20 +150,23 @@ const SongList = () => {
       {
         Header: '',
         accessor: 'action',
-        Cell: (props) => (
+        Cell: (props: any) => (
           <HStack whiteSpace='unset'>
-            <Button
-              colorScheme='teal'
-              size='sm'
-              onClick={() => handleEditSong(props.row.values.song_id)}
-              mr={2}
+            <EditSongModal
+              title={props.row.values.judul}
+              path={props.row.values.audio_path}
+              songid={props.row.values.song_id}
+              saveSongToDB={saveSongToDB}
             >
-              Edit
-            </Button>
+              <Button colorScheme='green' size='sm' mr={2} w='75px'>
+                Edit
+              </Button>
+            </EditSongModal>
             <Button
-              colorScheme='teal'
+              colorScheme='red'
               size='sm'
               onClick={() => handleDeleteSong(props.row.values.song_id)}
+              w='75px'
             >
               Delete
             </Button>
@@ -174,21 +219,24 @@ const SongList = () => {
       paddingBottom={10}
     >
       <Notification message={message} />
-      <Text fontSize='3xl' mb={4}>
-        Daftar Lagu Premium
-      </Text>
-      <VStack align='flex-start'>
-        <Button onClick={handleAddSong} colorScheme='teal' size='sm'>
-          Tambah Lagu
-        </Button>
-        {isAdd ? <AddSong /> : null}
-      </VStack>
+      <HStack spacing={4} mb={4}>
+        <Text fontSize='3xl'>Daftar Lagu Premium</Text>
+        <AddSongModal addSongToDB={addSongToDB}>
+          <Button
+            colorScheme='teal'
+            size='sm'
+            boxShadow='2px 3px 3px -1px rgba(0,0,0,0.75)'
+          >
+            <FaPlus size={10} />
+          </Button>
+        </AddSongModal>
+      </HStack>
       <TableContainer>
         <Table {...getTableProps()}>
           <Thead>
-            {headerGroups.map((headerGroup) => (
+            {headerGroups.map((headerGroup: any) => (
               <Tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
+                {headerGroup.headers.map((column: any) => (
                   <Th {...column.getHeaderProps()}>
                     {column.render('Header')}
                   </Th>
@@ -197,11 +245,11 @@ const SongList = () => {
             ))}
           </Thead>
           <Tbody {...getTableBodyProps()}>
-            {page.map((row) => {
+            {page.map((row: any) => {
               prepareRow(row);
               return (
                 <Tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
+                  {row.cells.map((cell: any) => {
                     return (
                       <Td
                         whiteSpace='normal'

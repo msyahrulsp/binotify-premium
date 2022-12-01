@@ -1,7 +1,7 @@
 import { Box, Button, Container, HStack, Text, VStack } from '@chakra-ui/react';
 import { MdQuestionAnswer } from 'react-icons/md';
 import { ISubscription } from '../@types/api';
-import { ActionModal } from './Modal';
+import { ActionModal } from './Modal/ActionModal';
 
 export const SubscriptionCard = ({
   creator_id,
