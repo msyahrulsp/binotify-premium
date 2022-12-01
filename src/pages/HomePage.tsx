@@ -4,10 +4,15 @@ import { useAuth } from '../hooks/useAuth';
 import SpotifyGIF from '../assets/spotify.gif';
 import { useNavigate } from 'react-router-dom';
 import { BiRightArrowAlt } from 'react-icons/bi';
+import { useEffect } from 'react';
 
 const HomePage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = 'Dashboard - Binotify Premium';
+  }, []);
 
   return (
     <Flex

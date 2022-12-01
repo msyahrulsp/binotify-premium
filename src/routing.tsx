@@ -20,11 +20,6 @@ export const Routing = [
         element: <SongList />
       },
       {
-        title: 'Manage Song',
-        path: 'singer/:singerid/songs/:songid',
-        element: <EditSong />
-      },
-      {
         title: 'Subscription',
         path: '/subscription',
         element: <SubscriptionPage />

@@ -8,11 +8,10 @@ import {
   Flex,
   Button,
   ModalCloseButton,
-  HStack,
-  useToast
+  HStack
 } from '@chakra-ui/react';
-import { ReactNode, useState } from 'react';
-import { StatusUpdate } from '../pages/SubscriptionPage';
+import { ReactNode } from 'react';
+import { StatusUpdate } from '../../pages/SubscriptionPage';
 
 export const ActionModal = ({
   children,
@@ -30,12 +29,10 @@ export const ActionModal = ({
   ) => Promise<void>;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const toast = useToast();
 
   return (
     <>
-      <Flex color='red' onClick={onOpen} flex={1}>
+      <Flex onClick={onOpen} flex={1}>
         {children}
       </Flex>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>

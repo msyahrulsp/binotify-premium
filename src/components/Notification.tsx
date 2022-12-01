@@ -2,20 +2,20 @@ import {
   Alert,
   AlertIcon,
   AlertTitle,
-  AlertDescription,
-} from '@chakra-ui/react'
+  AlertDescription
+} from '@chakra-ui/react';
 
-const Notification = ({ message }) => {
+const Notification = ({ message }: { message: string }) => {
   if (message) {
     return (
-      <Alert status="success" mb={2}>
+      <Alert status='info' mb={2}>
         <AlertIcon />
-          {message}
+        {message}
       </Alert>
-    )
+    );
   } else {
-    return null
+    return null;
   }
-}
+};
 
-export default Notification
+export default Notification;
