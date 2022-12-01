@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Routing } from './routing';
 import { AppContext } from './context/AppContext';
 import { IUser } from './@types/user';
+import { theme } from './util/theme';
 
 const App = () => {
   const [message, setMessage] = useState('');
@@ -17,7 +18,7 @@ const App = () => {
   };
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <AppContext.Provider
         value={{ message, setMessageContent, user, setUser }}
       >

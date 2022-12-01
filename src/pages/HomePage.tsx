@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Text, VStack } from '@chakra-ui/react';
+import { Button, Flex, Image, Text, Tooltip, VStack } from '@chakra-ui/react';
 import { useAuth } from '../hooks/useAuth';
 
 import SpotifyGIF from '../assets/spotify.gif';
@@ -17,17 +17,25 @@ const HomePage = () => {
       minH='80vh'
       gap={20}
     >
-      <Image
-        userSelect='none'
-        boxSize='500px'
-        objectFit='cover'
-        src={SpotifyGIF}
-        alt='logo'
-        borderRadius='lg'
-        onClick={() => window.open('http://localhost:3001/index.php', '_blank')}
-        cursor='pointer'
-        boxShadow='dark-lg'
-      />
+      <Tooltip label='Yes, no budget gif' fontSize='md' offset={[0, 35]}>
+        <Image
+          userSelect='none'
+          boxSize='500px'
+          objectFit='cover'
+          src={SpotifyGIF}
+          alt='logo'
+          borderRadius='lg'
+          onClick={() =>
+            window.open('http://localhost:3001/index.php', '_blank')
+          }
+          cursor='pointer'
+          transition='all 0.25s ease-in-out'
+          _hover={{
+            transform: 'scale(1.1)',
+            boxShadow: '5px 10px 10px rgba(0, 0, 0, 0.5)'
+          }}
+        />
+      </Tooltip>
       {!user ? (
         <VStack spacing={10}>
           <Text w='400px' fontSize='xl'>
@@ -50,8 +58,8 @@ const HomePage = () => {
       ) : user.isAdmin ? (
         <VStack spacing={10}>
           <Text w='400px' fontSize='xl'>
-            Halo Admin, selamat datang di <strong>Premium</strong>! Jangan lupa
-            gawe lho ya
+            Halo <strong>{user.name}</strong>!, selamat datang di{' '}
+            <strong>Premium</strong>! Jangan lupa gawe lho ya
           </Text>
           <Button
             w='400px'

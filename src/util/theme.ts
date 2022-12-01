@@ -8,15 +8,19 @@ export const theme = extendTheme({
   styles: {
     global: {
       '*': {
+        body: {
+          overflow: 'overlay'
+        },
         '&::-webkit-scrollbar': {
-          w: '2'
+          w: '10px'
+        },
+        '&::-webkit-scrollbar-track': {
+          backgroundColor: 'transparent'
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: 'hsla(0,0%,100%,.3)',
+          borderRadius: '15px'
         }
-        // '&::-webkit-scrollbar-track': {
-        //   backgroundColor: 'cyan'
-        // },
-        // '&::-webkit-scrollbar-thumb': {
-        //   backgroundColor: 'blue'
-        // }
       }
     }
   }

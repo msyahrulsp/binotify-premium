@@ -259,6 +259,7 @@ const SongList = () => {
             </span>
           </HStack>
           <select
+            style={{ background: 'transparent' }}
             value={pageSize}
             onChange={(e) => {
               setPageSize(Number(e.target.value));

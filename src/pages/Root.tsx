@@ -1,11 +1,10 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import React from 'react';
-import { Flex, VStack } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import Sidebar from '../components/Sidebar';
 import HomePage from './HomePage';
 
 const Root = () => {
-  const { pathname, state } = useLocation();
+  const { pathname } = useLocation();
 
   return (
     <Flex
