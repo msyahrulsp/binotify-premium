@@ -20,7 +20,7 @@ const HomePage = () => {
       <Tooltip label='Yes, no budget gif' fontSize='md' offset={[0, 35]}>
         <Image
           userSelect='none'
-          boxSize={{ base: '250px', lg: '500px' }}
+          boxSize={{ base: '250px', lg: '400px' }}
           objectFit='cover'
           src={SpotifyGIF}
           alt='logo'
@@ -39,7 +39,7 @@ const HomePage = () => {
       {!user ? (
         <VStack spacing={{ base: 6, lg: 10 }}>
           <Text
-            w={{ base: '90%', lg: '200px' }}
+            w={{ base: '90%', md: '300px', lg: '15vw' }}
             textAlign={{ base: 'center', lg: 'left' }}
             fontSize='xl'
           >
@@ -49,7 +49,7 @@ const HomePage = () => {
             satu Tugas Besar pada mata kuliah Web Based Development
           </Text>
           <Button
-            w={{ base: '90%', lg: '200px' }}
+            w={{ base: '90%', md: '300px', lg: '15vw' }}
             colorScheme='green'
             size='lg'
             onClick={() => navigate(`/login`)}
@@ -61,7 +61,7 @@ const HomePage = () => {
       ) : user.isAdmin ? (
         <VStack spacing={{ base: 6, lg: 10 }}>
           <Text
-            w={{ base: '90%', lg: '200px' }}
+            w={{ base: '90%', md: '300px', lg: '15vw' }}
             textAlign={{ base: 'center', lg: 'left' }}
             fontSize='xl'
           >
@@ -69,7 +69,7 @@ const HomePage = () => {
             <strong>Premium</strong>! Jangan lupa gawe ya 😊
           </Text>
           <Button
-            w={{ base: '90%', lg: '200px' }}
+            w={{ base: '90%', md: '300px', lg: '15vw' }}
             colorScheme='green'
             size='lg'
             onClick={() => navigate(`/subscription`)}
@@ -81,7 +81,7 @@ const HomePage = () => {
       ) : (
         <VStack spacing={{ base: 6, lg: 10 }}>
           <Text
-            w={{ base: '90%', lg: '200px' }}
+            w={{ base: '90%', md: '300px', lg: '15vw' }}
             textAlign={{ base: 'center', lg: 'left' }}
             fontSize='xl'
           >
@@ -91,7 +91,7 @@ const HomePage = () => {
             Jadi, jangan lupa untuk dicoba ya!
           </Text>
           <Button
-            w={{ base: '90%', lg: '200px' }}
+            w={{ base: '90%', md: '300px', lg: '15vw' }}
             colorScheme='green'
             size='lg'
             onClick={() => navigate(`/singer/${user.user_id}/songs`)}
