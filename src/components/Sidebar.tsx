@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link, matchPath } from 'react-router-dom';
+import { Link, matchPath, useNavigate } from 'react-router-dom';
 import { Flex, HStack, Image, Text, useToast, VStack } from '@chakra-ui/react';
 import { Access } from '../hooks/useRole';
 import { AppContext } from '../context/AppContext';
@@ -18,6 +18,7 @@ const Sidebar = () => {
   const { user, logout } = useAuth();
   const role = user?.isAdmin ? Access.ADMIN : Access.SINGER;
   const toast = useToast();
+  const navigate = useNavigate();
 
   const navItem = {
     ADMIN: [
@@ -47,6 +48,7 @@ const Sidebar = () => {
       position: 'top',
       isClosable: true
     });
+    navigate('/');
   };
 
   return (
