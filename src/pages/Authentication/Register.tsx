@@ -28,7 +28,7 @@ export const PasswordInput = ({
   onChange
 }: {
   label: string;
-  isError: boolean;
+  isError?: boolean;
   onChange: (e: any) => void;
 }) => {
   const [show, setShow] = useState(false);
