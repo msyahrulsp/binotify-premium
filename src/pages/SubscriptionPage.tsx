@@ -52,7 +52,7 @@ export const SubscriptionPage = () => {
       });
       const newReqList = reqList.filter(
         (req) =>
-          req.creator_id !== creator_id && req.subscriber_id !== subscriber_id
+          req.creator_id !== creator_id || req.subscriber_id !== subscriber_id
       );
       setReqList(newReqList);
     } catch (err: any) {
