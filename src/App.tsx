@@ -7,21 +7,13 @@ import { IUser } from './@types/user';
 import { theme } from './util/theme';
 
 const App = () => {
-  const [message, setMessage] = useState('');
   const [user, setUser] = useState<IUser | null>(null);
 
   const router = createBrowserRouter(Routing);
 
-  const setMessageContent = (val: string) => {
-    setMessage(val);
-    setTimeout(() => setMessage(''), 3000);
-  };
-
   return (
     <ChakraProvider theme={theme}>
-      <AppContext.Provider
-        value={{ message, setMessageContent, user, setUser }}
-      >
+      <AppContext.Provider value={{ user, setUser }}>
         <RouterProvider router={router} />
       </AppContext.Provider>
     </ChakraProvider>

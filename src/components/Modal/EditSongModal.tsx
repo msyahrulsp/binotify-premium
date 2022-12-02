@@ -17,9 +17,8 @@ import {
 } from '@chakra-ui/react';
 import { ReactNode, useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { AppContext } from '../../context/AppContext';
-import { AppContextProps } from '../../@types/context';
 import { uploadFile } from '../../util/helper';
+import ProgressBar from '../ProgressBar';
 
 const EditSongModal = ({
   title,
@@ -45,9 +44,6 @@ const EditSongModal = ({
   const [songPath, setSongPath] = useState(path);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
-  const { message, setMessageContent } = useContext(
-    AppContext
-  ) as AppContextProps;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -75,15 +71,15 @@ const EditSongModal = ({
       const fileDate = file.lastModifiedDate.toISOString();
       uploadFile(file, fileDate, setProgress).then((songPath: any) => {
         setSongPath(songPath);
-        setMessageContent('Lagu telah diperbarui.');
         saveSongToDB(songTitle, songPath, singerid, songid);
+        setLoading(false);
+        onClose();
       });
     } else {
-      setMessageContent('Lagu telah diperbarui.');
       saveSongToDB(songTitle, songPath, singerid, songid);
+      setLoading(false);
+      onClose();
     }
-    setLoading(false);
-    onClose();
   };
 
   return (
@@ -122,7 +118,7 @@ const EditSongModal = ({
                     <FormLabel>Song File</FormLabel>
                     <Input type='file' variant='flushed' accept='audio/*' />
                   </FormControl>
-                  {progress === 0 ? null : <Text>Uploading {progress}%</Text>}
+                  {progress === 0 ? null : <ProgressBar progress={progress} />}
                   <Button
                     colorScheme='teal'
                     size='sm'

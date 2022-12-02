@@ -9,17 +9,14 @@ import {
   Th,
   Thead,
   Tr,
-  VStack,
-  Text
+  Text,
+  useToast
 } from '@chakra-ui/react';
 import axios from 'axios';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 // @ts-ignore
 import { useTable, usePagination } from 'react-table';
-import { AppContext } from '../../context/AppContext';
-import { AppContextProps } from '../../@types/context';
-import Notification from '../../components/Notification';
 import { Access, useRole } from '../../hooks/useRole';
 import { Loading } from '../../components/Loading';
 import { FaPlus } from 'react-icons/fa';
@@ -31,9 +28,7 @@ const SongList = () => {
   const { haveAccess } = useRole(Access.SINGER);
 
   const [songs, setSongs] = useState([]);
-  const { message, setMessageContent } = useContext(
-    AppContext
-  ) as AppContextProps;
+  const toast = useToast();
 
   const baseUrl = import.meta.env.VITE_BASE_REST_URL;
 
@@ -70,9 +65,22 @@ const SongList = () => {
       );
       // @ts-ignore
       setSongs([...songs, data.data]);
-      console.log(data.data);
-      setMessageContent('Berhasil menambah lagu');
-    } catch (err) {
+
+      toast({
+        title: 'Success',
+        status: 'success',
+        description: 'Berhasil menambah lagu',
+        position: 'top',
+        isClosable: true
+      });
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.response?.data.message ?? err.message,
+        status: 'error',
+        position: 'top',
+        isClosable: true
+      });
       console.error(err);
     }
   };
@@ -91,10 +99,7 @@ const SongList = () => {
       audio_path: songPath
     };
     try {
-      const res = await axios.put(
-        `${baseUrl}/singer/${singerid}/songs/${songid}`,
-        payload
-      );
+      await axios.put(`${baseUrl}/singer/${singerid}/songs/${songid}`, payload);
       setSongs((prevState: any) => {
         const newState = prevState.map((song: any) => {
           if (song.song_id === songid) {
@@ -104,8 +109,22 @@ const SongList = () => {
         });
         return newState;
       });
-      setMessageContent('Berhasil mengubah lagu');
-    } catch (err) {
+
+      toast({
+        title: 'Success',
+        status: 'success',
+        description: 'Berhasil mengubah lagu',
+        position: 'top',
+        isClosable: true
+      });
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.response?.data.message ?? err.message,
+        status: 'error',
+        position: 'top',
+        isClosable: true
+      });
       console.error(err);
     }
   };
@@ -122,8 +141,21 @@ const SongList = () => {
         prevState.filter((prevState) => prevState.song_id !== songID)
       );
 
-      setMessageContent('Delete success.');
-    } catch (err) {
+      toast({
+        title: 'Success',
+        status: 'success',
+        description: 'Berhasil menghapus lagu',
+        position: 'top',
+        isClosable: true
+      });
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.response?.data.message ?? err.message,
+        status: 'error',
+        position: 'top',
+        isClosable: true
+      });
       console.error(err);
     }
   };
@@ -218,7 +250,6 @@ const SongList = () => {
       w='full'
       paddingBottom={10}
     >
-      <Notification message={message} />
       <HStack spacing={4} mb={4}>
         <Text fontSize='3xl'>Daftar Lagu Premium</Text>
         <AddSongModal addSongToDB={addSongToDB}>

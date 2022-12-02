@@ -4,7 +4,6 @@ import {
   FormLabel,
   Input,
   VStack,
-  Text,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -13,13 +12,13 @@ import {
   ModalBody,
   ModalCloseButton,
   Flex,
-  useToast
+  useToast,
+  Progress
 } from '@chakra-ui/react';
-import { ReactNode, useContext, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { AppContextProps } from '../../@types/context';
-import { AppContext } from '../../context/AppContext';
 import { uploadFile } from '../../util/helper';
+import ProgressBar from '../ProgressBar';
 
 const AddSongModal = ({
   addSongToDB,
@@ -28,9 +27,6 @@ const AddSongModal = ({
   addSongToDB: (title: string, path: string, singerid: any) => Promise<void>;
   children: ReactNode;
 }) => {
-  const { message, setMessageContent } = useContext(
-    AppContext
-  ) as AppContextProps;
   const { singerid } = useParams();
   const [songTitle, setSongTitle] = useState('');
   const [progress, setProgress] = useState(0);
@@ -67,7 +63,6 @@ const AddSongModal = ({
 
     uploadFile(file, fileDate, setProgress).then((songPath: any) => {
       addSongToDB(songTitle, songPath, singerid);
-      setMessageContent('Lagu baru berhasil ditambahkan.');
       setSongTitle('');
       e.target.reset();
       setLoading(false);
@@ -91,7 +86,7 @@ const AddSongModal = ({
           <ModalCloseButton />
           <ModalBody>
             <form onSubmit={handleSubmit}>
-              <VStack gap={2} alignItems='flex-start' mb={4}>
+              <VStack gap={2} alignItems='flex-start' w='full' mb={4}>
                 <FormControl>
                   <FormLabel>Judul</FormLabel>
                   <Input
@@ -110,7 +105,7 @@ const AddSongModal = ({
                     variant='flushed'
                   />
                 </FormControl>
-                {progress === 0 ? null : <Text>Uploading {progress}%</Text>}
+                {progress === 0 ? null : <ProgressBar progress={progress} />}
                 <Button
                   colorScheme='teal'
                   size='sm'
