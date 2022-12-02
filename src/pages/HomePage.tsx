@@ -19,7 +19,7 @@ const HomePage = () => {
       flexDirection={{ base: 'column', lg: 'row' }}
       justifyContent='center'
       alignItems='center'
-      minH={{ base: 'fit-content', lg: '80vh' }}
+      minH='80vh'
       gap={{ base: 5, lg: 20 }}
     >
       <Tooltip label='Yes, no budget gif' fontSize='md' offset={[0, 35]}>
@@ -44,7 +44,7 @@ const HomePage = () => {
       {!user ? (
         <VStack spacing={{ base: 6, lg: 10 }}>
           <Text
-            w={{ base: '90%', md: '300px', lg: '15vw' }}
+            w={{ base: '90%', md: '300px', lg: '20vw' }}
             textAlign={{ base: 'center', lg: 'left' }}
             fontSize='xl'
           >
@@ -54,7 +54,7 @@ const HomePage = () => {
             satu Tugas Besar pada mata kuliah Web Based Development
           </Text>
           <Button
-            w={{ base: '90%', md: '300px', lg: '15vw' }}
+            w={{ base: '90%', md: '300px', lg: '20vw' }}
             colorScheme='green'
             size='lg'
             onClick={() => navigate(`/login`)}
